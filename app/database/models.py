@@ -105,3 +105,55 @@ class Subniche(Base):
         default=datetime.utcnow,
         nullable=False,
     )
+
+class Opportunity(Base):
+    __tablename__ = "opportunities"
+
+    id: Mapped[int] = mapped_column(
+        Integer,
+        primary_key=True,
+        autoincrement=True,
+    )
+
+    niche_id: Mapped[int] = mapped_column(
+        Integer,
+        nullable=False,
+    )
+
+    subniche_id: Mapped[int] = mapped_column(
+        Integer,
+        nullable=True,
+    )
+
+    title: Mapped[str] = mapped_column(
+        String(300),
+        nullable=False,
+    )
+
+    description: Mapped[str] = mapped_column(
+        String(1000),
+        nullable=True,
+    )
+
+    potential: Mapped[str] = mapped_column(
+        String(30),
+        nullable=False,
+        default="medium",
+    )
+
+    source: Mapped[str] = mapped_column(
+        String(500),
+        nullable=True,
+    )
+
+    status: Mapped[str] = mapped_column(
+        String(30),
+        nullable=False,
+        default="new",
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        default=datetime.utcnow,
+        nullable=False,
+    )

@@ -4,6 +4,9 @@ from app.ui.projects_page import ProjectsPage
 from app.ui.niche_detail_page import (
     NicheDetailPage,
 )
+from app.ui.opportunities_page import (
+    OpportunitiesPage,
+)
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QFrame,
@@ -132,6 +135,7 @@ class MainWindow(QMainWindow):
         self.creator_page = CreatorPage()
         self.projects_page = ProjectsPage()
         self.niches_page = NichesPage()
+        self.opportunities_page = OpportunitiesPage()
         self.niche_detail_page = NicheDetailPage()
 
         self.creator_page.project_created.connect(
@@ -151,7 +155,7 @@ class MainWindow(QMainWindow):
         )
 
         self.pages.addWidget(
-            self._create_placeholder("🔎 Explorar")
+            self.opportunities_page
         )
 
         self.pages.addWidget(
