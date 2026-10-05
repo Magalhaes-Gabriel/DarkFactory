@@ -3,6 +3,7 @@ from pathlib import Path
 
 from PySide6.QtWidgets import QApplication
 
+from app.database.database import create_database
 from app.ui.main_window import MainWindow
 
 
@@ -15,6 +16,8 @@ def load_stylesheet():
 
 
 def main():
+    create_database()
+
     app = QApplication(sys.argv)
 
     app.setStyleSheet(load_stylesheet())
