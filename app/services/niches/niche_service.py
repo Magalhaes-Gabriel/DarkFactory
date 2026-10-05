@@ -37,6 +37,15 @@ class NicheService:
             )
 
     @staticmethod
+    def get_niche(niche_id: int,) -> Niche | None:
+
+        with SessionLocal() as session:
+            return session.get(
+                Niche,
+                niche_id,
+            )
+        
+    @staticmethod
     def search_niches(
         search_term: str,
     ) -> list[Niche]:

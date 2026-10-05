@@ -1,6 +1,9 @@
 from app.ui.niches_page import NichesPage
 from app.ui.creator_page import CreatorPage
 from app.ui.projects_page import ProjectsPage
+from app.ui.niche_detail_page import (
+    NicheDetailPage,
+)
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QFrame,
@@ -83,14 +86,14 @@ class MainWindow(QMainWindow):
         self._add_menu_button(
             layout,
             "🎬  Criar conteúdo",
-            3,
+            4,
             "creator",
         )
 
         self._add_menu_button(
             layout,
             "📁  Projetos",
-            4,
+            5,
             "projects",
         )
 
@@ -99,7 +102,7 @@ class MainWindow(QMainWindow):
         self._add_menu_button(
             layout,
             "⚙  Configurações",
-            5,
+            6,
             "settings",
         )
 
@@ -129,22 +132,48 @@ class MainWindow(QMainWindow):
         self.creator_page = CreatorPage()
         self.projects_page = ProjectsPage()
         self.niches_page = NichesPage()
+        self.niche_detail_page = NicheDetailPage()
 
         self.creator_page.project_created.connect(
-        self.projects_page.refresh
+            self.projects_page.refresh
         )
 
-        self.pages.addWidget(self._create_dashboard())
-        self.pages.addWidget(
-         self._create_placeholder("🔎 Explorar")
+        self.niches_page.niche_selected.connect(
+            self._open_niche_detail
         )
+
+        self.niche_detail_page.back_requested.connect(
+            self._back_to_niches
+        )
+
+        self.pages.addWidget(
+            self._create_dashboard()
+        )
+
+        self.pages.addWidget(
+            self._create_placeholder("🔎 Explorar")
+        )
+
         self.pages.addWidget(
             self.niches_page
         )
-        self.pages.addWidget(self.creator_page)
-        self.pages.addWidget(self.projects_page)
+
         self.pages.addWidget(
-            self._create_placeholder("⚙ Configurações")
+            self.niche_detail_page
+        )
+
+        self.pages.addWidget(
+            self.creator_page
+        )
+
+        self.pages.addWidget(
+            self.projects_page
+        )
+
+        self.pages.addWidget(
+            self._create_placeholder(
+                "⚙ Configurações"
+            )
         )
 
         layout.addWidget(self.pages)
@@ -250,3 +279,22 @@ class MainWindow(QMainWindow):
 
     def _change_page(self, index):
         self.pages.setCurrentIndex(index)
+
+    def _open_niche_detail(self, niche_id):
+
+        self.niche_detail_page.load_niche(
+            niche_id
+        )
+
+        self.pages.setCurrentWidget(
+            self.niche_detail_page
+        )
+
+
+    def _back_to_niches(self):
+
+        self.niches_page.refresh()
+
+        self.pages.setCurrentWidget(
+            self.niches_page
+        )

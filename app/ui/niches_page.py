@@ -1,3 +1,4 @@
+from PySide6.QtCore import Signal, Qt
 from PySide6.QtWidgets import (
     QInputDialog,
     QLabel,
@@ -17,10 +18,15 @@ from app.services.subniches.subniche_service import (
 
 class NichesPage(QWidget):
 
+    niche_selected = Signal(int)
+
     def __init__(self):
         super().__init__()
 
         self._create_interface()
+        self.niche_list.itemDoubleClicked.connect(
+            self._open_niche
+        )
         self.refresh()
 
     def _create_interface(self):
@@ -87,6 +93,10 @@ class NichesPage(QWidget):
         for niche in niches:
 
             item = QListWidgetItem()
+            item.setData(
+                Qt.UserRole,
+                niche.id,
+            )
 
             text = (
                 f"🎯 {niche.name}\n"
@@ -168,3 +178,14 @@ class NichesPage(QWidget):
         NicheService.create_niche(name)
 
         self.refresh()
+
+    def _open_niche(self, item):
+
+        niche_id = item.data(
+            Qt.UserRole
+        )
+
+        if niche_id is not None:
+            self.niche_selected.emit(
+                niche_id
+            )
