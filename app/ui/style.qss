@@ -95,3 +95,57 @@ QLabel#placeholderDescription {
     color: #858b98;
     font-size: 14px;
 }
+
+QPushButton#primaryButton {
+    background-color: #5b5ce2;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+QPushButton#primaryButton:hover {
+    background-color: #6c6de8;
+}
+
+QPushButton#primaryButton:pressed {
+    background-color: #4b4cc5;
+}
+
+QLineEdit,
+QComboBox {
+    background-color: #191c23;
+    color: #ffffff;
+    border: 1px solid #292d36;
+    border-radius: 7px;
+    padding: 9px;
+    font-size: 14px;
+}
+
+QLineEdit:focus,
+QComboBox:focus {
+    border: 1px solid #5b5ce2;
+}
+
+QListWidget#projectList {
+    background-color: #191c23;
+    color: #ffffff;
+    border: 1px solid #292d36;
+    border-radius: 10px;
+    padding: 8px;
+}
+
+QListWidget#projectList::item {
+    padding: 15px;
+    border-bottom: 1px solid #292d36;
+}
+
+QListWidget#projectList::item:hover {
+    background-color: #242832;
+}
+
+QListWidget#projectList::item:selected {
+    background-color: #303342;
+}

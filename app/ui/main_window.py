@@ -1,3 +1,5 @@
+from app.ui.creator_page import CreatorPage
+from app.ui.projects_page import ProjectsPage
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QFrame,
@@ -123,12 +125,25 @@ class MainWindow(QMainWindow):
 
         self.pages = QStackedWidget()
 
+        self.creator_page = CreatorPage()
+        self.projects_page = ProjectsPage()
+
+        self.creator_page.project_created.connect(
+        self.projects_page.refresh
+        )
+
         self.pages.addWidget(self._create_dashboard())
-        self.pages.addWidget(self._create_placeholder("🔎 Explorar"))
-        self.pages.addWidget(self._create_placeholder("🎯 Nichos"))
-        self.pages.addWidget(self._create_placeholder("🎬 Criar conteúdo"))
-        self.pages.addWidget(self._create_placeholder("📁 Projetos"))
-        self.pages.addWidget(self._create_placeholder("⚙ Configurações"))
+        self.pages.addWidget(
+         self._create_placeholder("🔎 Explorar")
+        )
+        self.pages.addWidget(
+            self._create_placeholder("🎯 Nichos")
+        )
+        self.pages.addWidget(self.creator_page)
+        self.pages.addWidget(self.projects_page)
+        self.pages.addWidget(
+            self._create_placeholder("⚙ Configurações")
+        )
 
         layout.addWidget(self.pages)
 
