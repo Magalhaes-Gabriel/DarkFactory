@@ -1,3 +1,4 @@
+from app.ui.niches_page import NichesPage
 from app.ui.creator_page import CreatorPage
 from app.ui.projects_page import ProjectsPage
 from PySide6.QtCore import Qt
@@ -127,6 +128,7 @@ class MainWindow(QMainWindow):
 
         self.creator_page = CreatorPage()
         self.projects_page = ProjectsPage()
+        self.niches_page = NichesPage()
 
         self.creator_page.project_created.connect(
         self.projects_page.refresh
@@ -137,7 +139,7 @@ class MainWindow(QMainWindow):
          self._create_placeholder("🔎 Explorar")
         )
         self.pages.addWidget(
-            self._create_placeholder("🎯 Nichos")
+            self.niches_page
         )
         self.pages.addWidget(self.creator_page)
         self.pages.addWidget(self.projects_page)
