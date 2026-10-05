@@ -1,0 +1,97 @@
+QMainWindow {
+    background-color: #111318;
+}
+
+QFrame#sidebar {
+    background-color: #171a21;
+    border-right: 1px solid #292d36;
+}
+
+QFrame#content {
+    background-color: #111318;
+}
+
+QLabel#appTitle {
+    color: #ffffff;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+QLabel#appSubtitle {
+    color: #858b98;
+    font-size: 11px;
+}
+
+QPushButton#menuButton {
+    background-color: transparent;
+    color: #aeb4c0;
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    text-align: left;
+    font-size: 14px;
+}
+
+QPushButton#menuButton:hover {
+    background-color: #242832;
+    color: #ffffff;
+}
+
+QLabel#pageTitle {
+    color: #ffffff;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+QLabel#pageDescription {
+    color: #858b98;
+    font-size: 14px;
+}
+
+QLabel#sectionTitle {
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+QFrame#card {
+    background-color: #191c23;
+    border: 1px solid #292d36;
+    border-radius: 12px;
+    min-width: 150px;
+}
+
+QLabel#cardIcon {
+    font-size: 24px;
+}
+
+QLabel#cardTitle {
+    color: #858b98;
+    font-size: 13px;
+}
+
+QLabel#cardValue {
+    color: #ffffff;
+    font-size: 26px;
+    font-weight: bold;
+}
+
+QLabel#emptyState {
+    background-color: #191c23;
+    border: 1px solid #292d36;
+    border-radius: 12px;
+    color: #858b98;
+    padding: 25px;
+    font-size: 14px;
+}
+
+QLabel#placeholderTitle {
+    color: #ffffff;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+QLabel#placeholderDescription {
+    color: #858b98;
+    font-size: 14px;
+}

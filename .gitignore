@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+.venv/
+
+# Environment variables
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Application data
+storage/*
+!storage/.gitkeep
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Build
+build/
+dist/
+*.spec
+
+# Python packaging
+*.egg-info/
+
+# Logs
+*.log
