@@ -1,7 +1,5 @@
-from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
-    QFrame,
-    QHBoxLayout,
+    QInputDialog,
     QLabel,
     QLineEdit,
     QListWidget,
@@ -12,6 +10,9 @@ from PySide6.QtWidgets import (
 )
 
 from app.services.niches.niche_service import NicheService
+from app.services.subniches.subniche_service import (
+    SubnicheService,
+)
 
 
 class NichesPage(QWidget):
@@ -32,8 +33,8 @@ class NichesPage(QWidget):
         title.setObjectName("pageTitle")
 
         description = QLabel(
-            "Organize os nichos que serão utilizados "
-            "pelo Universo em uma Casca de Nós."
+            "Organize os nichos e subnichos "
+            "do Universo em uma Casca de Nós."
         )
 
         description.setObjectName(
@@ -42,8 +43,6 @@ class NichesPage(QWidget):
 
         layout.addWidget(title)
         layout.addWidget(description)
-
-        search_layout = QHBoxLayout()
 
         self.search_input = QLineEdit()
 
@@ -55,11 +54,7 @@ class NichesPage(QWidget):
             self.search
         )
 
-        search_layout.addWidget(
-            self.search_input
-        )
-
-        layout.addLayout(search_layout)
+        layout.addWidget(self.search_input)
 
         self.niche_list = QListWidget()
 
@@ -68,8 +63,6 @@ class NichesPage(QWidget):
         )
 
         layout.addWidget(self.niche_list)
-
-        button_layout = QHBoxLayout()
 
         self.add_button = QPushButton(
             "+ Adicionar nicho"
@@ -83,13 +76,7 @@ class NichesPage(QWidget):
             self.add_niche
         )
 
-        button_layout.addWidget(
-            self.add_button
-        )
-
-        button_layout.addStretch()
-
-        layout.addLayout(button_layout)
+        layout.addWidget(self.add_button)
 
     def refresh(self):
 
@@ -101,10 +88,26 @@ class NichesPage(QWidget):
 
             item = QListWidgetItem()
 
-            item.setText(
+            text = (
                 f"🎯 {niche.name}\n"
                 f"{niche.description or ''}"
             )
+
+            subniches = (
+                SubnicheService
+                .get_subniches(niche.id)
+            )
+
+            if subniches:
+
+                text += "\n\nSubnichos:"
+
+                for subniche in subniches:
+                    text += (
+                        f"\n   • {subniche.name}"
+                    )
+
+            item.setText(text)
 
             self.niche_list.addItem(item)
 
@@ -126,18 +129,30 @@ class NichesPage(QWidget):
 
             item = QListWidgetItem()
 
-            item.setText(
+            text = (
                 f"🎯 {niche.name}\n"
                 f"{niche.description or ''}"
             )
 
+            subniches = (
+                SubnicheService
+                .get_subniches(niche.id)
+            )
+
+            if subniches:
+
+                text += "\n\nSubnichos:"
+
+                for subniche in subniches:
+                    text += (
+                        f"\n   • {subniche.name}"
+                    )
+
+            item.setText(text)
+
             self.niche_list.addItem(item)
 
     def add_niche(self):
-
-        from PySide6.QtWidgets import (
-            QInputDialog,
-        )
 
         name, ok = QInputDialog.getText(
             self,

@@ -75,3 +75,33 @@ class Niche(Base):
         default=datetime.utcnow,
         nullable=False,
     )
+
+class Subniche(Base):
+    __tablename__ = "subniches"
+
+    id: Mapped[int] = mapped_column(
+        Integer,
+        primary_key=True,
+        autoincrement=True,
+    )
+
+    niche_id: Mapped[int] = mapped_column(
+        Integer,
+        nullable=False,
+    )
+
+    name: Mapped[str] = mapped_column(
+        String(100),
+        nullable=False,
+    )
+
+    description: Mapped[str] = mapped_column(
+        String(500),
+        nullable=True,
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        default=datetime.utcnow,
+        nullable=False,
+    )
