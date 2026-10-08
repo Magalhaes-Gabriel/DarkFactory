@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import DateTime, Integer, String
+from sqlalchemy import DateTime, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database.database import Base
@@ -28,6 +28,26 @@ class Project(Base):
     category: Mapped[str] = mapped_column(
         String(100),
         nullable=False,
+    )
+
+    niche_id: Mapped[int | None] = mapped_column(
+        Integer,
+        nullable=True,
+    )
+
+    subniche_id: Mapped[int | None] = mapped_column(
+        Integer,
+        nullable=True,
+    )
+
+    opportunity_id: Mapped[int | None] = mapped_column(
+        Integer,
+        nullable=True,
+    )
+
+    script: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
     )
 
     status: Mapped[str] = mapped_column(
@@ -76,6 +96,7 @@ class Niche(Base):
         nullable=False,
     )
 
+
 class Subniche(Base):
     __tablename__ = "subniches"
 
@@ -105,6 +126,7 @@ class Subniche(Base):
         default=datetime.utcnow,
         nullable=False,
     )
+
 
 class Opportunity(Base):
     __tablename__ = "opportunities"

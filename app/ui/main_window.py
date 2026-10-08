@@ -7,6 +7,15 @@ from app.ui.niche_detail_page import (
 from app.ui.opportunities_page import (
     OpportunitiesPage,
 )
+
+from app.services.niches.niche_service import (
+    NicheService,
+)
+
+from app.services.opportunities.opportunity_service import (
+    OpportunityService,
+)
+
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QFrame,
@@ -21,47 +30,118 @@ from PySide6.QtWidgets import (
 
 
 class MainWindow(QMainWindow):
+
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle("Dark Factory")
-        self.setMinimumSize(1200, 700)
+        self.setWindowTitle(
+            "Dark Factory"
+        )
+
+        self.setMinimumSize(
+            1200,
+            700,
+        )
 
         self._create_interface()
 
-    def _create_interface(self):
-        central_widget = QWidget()
-        self.setCentralWidget(central_widget)
+    # =====================================================
+    # Interface principal
+    # =====================================================
 
-        main_layout = QHBoxLayout(central_widget)
-        main_layout.setContentsMargins(0, 0, 0, 0)
+    def _create_interface(self):
+
+        central_widget = QWidget()
+
+        self.setCentralWidget(
+            central_widget
+        )
+
+        main_layout = QHBoxLayout(
+            central_widget
+        )
+
+        main_layout.setContentsMargins(
+            0,
+            0,
+            0,
+            0,
+        )
+
         main_layout.setSpacing(0)
 
         sidebar = self._create_sidebar()
+
         content = self._create_content()
 
-        main_layout.addWidget(sidebar)
-        main_layout.addWidget(content)
+        main_layout.addWidget(
+            sidebar
+        )
+
+        main_layout.addWidget(
+            content
+        )
+
+    # =====================================================
+    # Sidebar
+    # =====================================================
 
     def _create_sidebar(self):
-        sidebar = QFrame()
-        sidebar.setObjectName("sidebar")
-        sidebar.setFixedWidth(240)
 
-        layout = QVBoxLayout(sidebar)
-        layout.setContentsMargins(20, 25, 20, 20)
+        sidebar = QFrame()
+
+        sidebar.setObjectName(
+            "sidebar"
+        )
+
+        sidebar.setFixedWidth(
+            240
+        )
+
+        layout = QVBoxLayout(
+            sidebar
+        )
+
+        layout.setContentsMargins(
+            20,
+            25,
+            20,
+            20,
+        )
+
         layout.setSpacing(8)
 
-        title = QLabel("DARK FACTORY")
-        title.setObjectName("appTitle")
+        title = QLabel(
+            "DARK FACTORY"
+        )
 
-        subtitle = QLabel("Universo em uma Casca de Nós")
-        subtitle.setObjectName("appSubtitle")
-        subtitle.setWordWrap(True)
+        title.setObjectName(
+            "appTitle"
+        )
 
-        layout.addWidget(title)
-        layout.addWidget(subtitle)
-        layout.addSpacing(30)
+        subtitle = QLabel(
+            "Universo em uma Casca de Nós"
+        )
+
+        subtitle.setObjectName(
+            "appSubtitle"
+        )
+
+        subtitle.setWordWrap(
+            True
+        )
+
+        layout.addWidget(
+            title
+        )
+
+        layout.addWidget(
+            subtitle
+        )
+
+        layout.addSpacing(
+            30
+        )
 
         self.buttons = {}
 
@@ -111,32 +191,83 @@ class MainWindow(QMainWindow):
 
         return sidebar
 
-    def _add_menu_button(self, layout, text, index, name):
-        button = QPushButton(text)
-        button.setObjectName("menuButton")
-        button.setCursor(Qt.PointingHandCursor)
+    def _add_menu_button(
+        self,
+        layout,
+        text,
+        index,
+        name,
+    ):
+
+        button = QPushButton(
+            text
+        )
+
+        button.setObjectName(
+            "menuButton"
+        )
+
+        button.setCursor(
+            Qt.PointingHandCursor
+        )
 
         button.clicked.connect(
-            lambda checked=False, i=index: self._change_page(i)
+            lambda checked=False, i=index:
+            self._change_page(i)
         )
 
         self.buttons[name] = button
-        layout.addWidget(button)
+
+        layout.addWidget(
+            button
+        )
+
+    # =====================================================
+    # Páginas
+    # =====================================================
 
     def _create_content(self):
-        container = QFrame()
-        container.setObjectName("content")
 
-        layout = QVBoxLayout(container)
-        layout.setContentsMargins(35, 30, 35, 30)
+        container = QFrame()
+
+        container.setObjectName(
+            "content"
+        )
+
+        layout = QVBoxLayout(
+            container
+        )
+
+        layout.setContentsMargins(
+            35,
+            30,
+            35,
+            30,
+        )
 
         self.pages = QStackedWidget()
 
+        # -------------------------------------------------
+        # Instanciar páginas
+        # -------------------------------------------------
+
         self.creator_page = CreatorPage()
+
         self.projects_page = ProjectsPage()
+
         self.niches_page = NichesPage()
-        self.opportunities_page = OpportunitiesPage()
-        self.niche_detail_page = NicheDetailPage()
+
+        self.opportunities_page = (
+            OpportunitiesPage()
+        )
+
+        self.niche_detail_page = (
+            NicheDetailPage()
+        )
+
+        # -------------------------------------------------
+        # Sinais
+        # -------------------------------------------------
 
         self.creator_page.project_created.connect(
             self.projects_page.refresh
@@ -149,6 +280,14 @@ class MainWindow(QMainWindow):
         self.niche_detail_page.back_requested.connect(
             self._back_to_niches
         )
+
+        self.opportunities_page.opportunity_create_project_requested.connect(
+            self._create_project_from_opportunity
+        )
+
+        # -------------------------------------------------
+        # Adicionar páginas
+        # -------------------------------------------------
 
         self.pages.addWidget(
             self._create_dashboard()
@@ -180,111 +319,309 @@ class MainWindow(QMainWindow):
             )
         )
 
-        layout.addWidget(self.pages)
+        layout.addWidget(
+            self.pages
+        )
 
         return container
 
+    # =====================================================
+    # Criar projeto a partir de oportunidade
+    # =====================================================
+
+    def _create_project_from_opportunity(
+        self,
+        opportunity_id,
+    ):
+        opportunities = (
+            OpportunityService.get_opportunities()
+        )
+
+        opportunity = next(
+            (
+                item
+                for item in opportunities
+                if item.id == opportunity_id
+            ),
+            None,
+        )
+
+        if opportunity is None:
+            return
+
+        niche = NicheService.get_niche(
+            opportunity.niche_id
+        )
+
+        category = (
+            niche.name
+            if niche is not None
+            else "Outro"
+        )
+
+        self.creator_page.load_opportunity(
+            title=opportunity.title,
+            topic=opportunity.title,
+            category=category,
+            niche_id=opportunity.niche_id,
+            subniche_id=opportunity.subniche_id,
+            opportunity_id=opportunity.id,
+        )
+
+        self.pages.setCurrentWidget(
+            self.creator_page
+        )
+
+    # =====================================================
+    # Dashboard
+    # =====================================================
+
     def _create_dashboard(self):
+
         page = QWidget()
 
-        layout = QVBoxLayout(page)
-        layout.setSpacing(20)
+        layout = QVBoxLayout(
+            page
+        )
 
-        title = QLabel("Bom dia!")
-        title.setObjectName("pageTitle")
+        layout.setSpacing(
+            20
+        )
+
+        title = QLabel(
+            "Bom dia!"
+        )
+
+        title.setObjectName(
+            "pageTitle"
+        )
 
         description = QLabel(
             "Bem-vindo à central de produção do "
             "Universo em uma Casca de Nós."
         )
-        description.setObjectName("pageDescription")
 
-        layout.addWidget(title)
-        layout.addWidget(description)
+        description.setObjectName(
+            "pageDescription"
+        )
 
-        layout.addSpacing(20)
+        layout.addWidget(
+            title
+        )
+
+        layout.addWidget(
+            description
+        )
+
+        layout.addSpacing(
+            20
+        )
 
         cards_layout = QHBoxLayout()
 
         cards_layout.addWidget(
-            self._create_card("🎯", "Nichos", "0")
+            self._create_card(
+                "🎯",
+                "Nichos",
+                "0",
+            )
         )
 
         cards_layout.addWidget(
-            self._create_card("💡", "Ideias", "0")
+            self._create_card(
+                "💡",
+                "Ideias",
+                "0",
+            )
         )
 
         cards_layout.addWidget(
-            self._create_card("🎬", "Vídeos", "0")
+            self._create_card(
+                "🎬",
+                "Vídeos",
+                "0",
+            )
         )
 
         cards_layout.addWidget(
-            self._create_card("📱", "Shorts", "0")
+            self._create_card(
+                "📱",
+                "Shorts",
+                "0",
+            )
         )
 
-        layout.addLayout(cards_layout)
+        layout.addLayout(
+            cards_layout
+        )
 
-        layout.addSpacing(30)
+        layout.addSpacing(
+            30
+        )
 
-        opportunities_title = QLabel("🔥 Oportunidades")
-        opportunities_title.setObjectName("sectionTitle")
+        opportunities_title = QLabel(
+            "🔥 Oportunidades"
+        )
 
-        layout.addWidget(opportunities_title)
+        opportunities_title.setObjectName(
+            "sectionTitle"
+        )
+
+        layout.addWidget(
+            opportunities_title
+        )
 
         opportunity = QLabel(
             "Ainda não existem oportunidades pesquisadas.\n\n"
             "Use o módulo Explorar para encontrar novos temas."
         )
-        opportunity.setObjectName("emptyState")
 
-        layout.addWidget(opportunity)
+        opportunity.setObjectName(
+            "emptyState"
+        )
+
+        layout.addWidget(
+            opportunity
+        )
+
         layout.addStretch()
 
         return page
 
-    def _create_card(self, icon, title, value):
+    # =====================================================
+    # Card
+    # =====================================================
+
+    def _create_card(
+        self,
+        icon,
+        title,
+        value,
+    ):
+
         card = QFrame()
-        card.setObjectName("card")
 
-        layout = QVBoxLayout(card)
-        layout.setContentsMargins(20, 20, 20, 20)
+        card.setObjectName(
+            "card"
+        )
 
-        icon_label = QLabel(icon)
-        icon_label.setObjectName("cardIcon")
+        layout = QVBoxLayout(
+            card
+        )
 
-        title_label = QLabel(title)
-        title_label.setObjectName("cardTitle")
+        layout.setContentsMargins(
+            20,
+            20,
+            20,
+            20,
+        )
 
-        value_label = QLabel(value)
-        value_label.setObjectName("cardValue")
+        icon_label = QLabel(
+            icon
+        )
 
-        layout.addWidget(icon_label)
-        layout.addWidget(title_label)
-        layout.addWidget(value_label)
+        icon_label.setObjectName(
+            "cardIcon"
+        )
+
+        title_label = QLabel(
+            title
+        )
+
+        title_label.setObjectName(
+            "cardTitle"
+        )
+
+        value_label = QLabel(
+            value
+        )
+
+        value_label.setObjectName(
+            "cardValue"
+        )
+
+        layout.addWidget(
+            icon_label
+        )
+
+        layout.addWidget(
+            title_label
+        )
+
+        layout.addWidget(
+            value_label
+        )
 
         return card
 
-    def _create_placeholder(self, title):
+    # =====================================================
+    # Placeholder
+    # =====================================================
+
+    def _create_placeholder(
+        self,
+        title,
+    ):
+
         page = QWidget()
 
-        layout = QVBoxLayout(page)
-        layout.setAlignment(Qt.AlignCenter)
+        layout = QVBoxLayout(
+            page
+        )
 
-        label = QLabel(title)
-        label.setObjectName("placeholderTitle")
+        layout.setAlignment(
+            Qt.AlignCenter
+        )
 
-        description = QLabel("Módulo em desenvolvimento.")
-        description.setObjectName("placeholderDescription")
+        label = QLabel(
+            title
+        )
 
-        layout.addWidget(label, alignment=Qt.AlignCenter)
-        layout.addWidget(description, alignment=Qt.AlignCenter)
+        label.setObjectName(
+            "placeholderTitle"
+        )
+
+        description = QLabel(
+            "Módulo em desenvolvimento."
+        )
+
+        description.setObjectName(
+            "placeholderDescription"
+        )
+
+        layout.addWidget(
+            label,
+            alignment=Qt.AlignCenter,
+        )
+
+        layout.addWidget(
+            description,
+            alignment=Qt.AlignCenter,
+        )
 
         return page
 
-    def _change_page(self, index):
-        self.pages.setCurrentIndex(index)
+    # =====================================================
+    # Navegação
+    # =====================================================
 
-    def _open_niche_detail(self, niche_id):
+    def _change_page(
+        self,
+        index,
+    ):
+
+        self.pages.setCurrentIndex(
+            index
+        )
+
+    # =====================================================
+    # Detalhes do nicho
+    # =====================================================
+
+    def _open_niche_detail(
+        self,
+        niche_id,
+    ):
 
         self.niche_detail_page.load_niche(
             niche_id
@@ -294,7 +631,6 @@ class MainWindow(QMainWindow):
             self.niche_detail_page
         )
 
-
     def _back_to_niches(self):
 
         self.niches_page.refresh()
@@ -302,3 +638,4 @@ class MainWindow(QMainWindow):
         self.pages.setCurrentWidget(
             self.niches_page
         )
+
