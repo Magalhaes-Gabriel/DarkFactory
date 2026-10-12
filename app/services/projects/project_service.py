@@ -71,3 +71,21 @@ class ProjectService:
             session.refresh(project)
 
             return project
+
+    @staticmethod
+    def update_status(project_id: int, status: str,) -> Project | None:
+        with SessionLocal() as session:
+            project = session.get(
+                Project,
+                project_id,
+            )
+
+            if project is None:
+                return None
+
+            project.status = status
+
+            session.commit()
+            session.refresh(project)
+
+            return project
